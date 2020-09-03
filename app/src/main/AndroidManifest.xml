@@ -16,9 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
          </intent-filter>
         </activity>
-      
         <activity android:name=".IntroActivity"/>
-        <activity android:name=".user_session.Forgot_PasswordActivity"></activity>
+        <activity android:name=".user_session.Forgot_PasswordActivity"/>
         <activity android:name=".user_session.OtpActivity" />
         <activity
             android:name=".user_session.RegisterActivity"

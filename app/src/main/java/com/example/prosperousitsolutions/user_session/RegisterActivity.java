@@ -70,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
                         i.putExtra("password",password.getText().toString());
 
                         startActivity(i);
-
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                        //((UserSessionActivity)getActivity()).setFragment(new OTPFragment(username.getText().toString(),phone.getText().toString(),password.getText().toString()));
                     }
                     else {

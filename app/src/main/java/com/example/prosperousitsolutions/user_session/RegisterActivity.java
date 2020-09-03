@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +43,9 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private ImageView skipLoginBtn;
     public static boolean disableCloseBtn=false;
-
+    RadioGroup radioGroup;
+    RadioButton search, offer;
+    private boolean isFreeLancer = true;
 
     private void init()
     {
@@ -53,39 +57,10 @@ public class RegisterActivity extends AppCompatActivity {
         confirm_password=findViewById(R.id.confirm_password);
         progressbar=findViewById(R.id.progressBar);
         register=findViewById(R.id.btn_register);
+        search = findViewById(R.id.search);
+        offer = findViewById(R.id.offer);
+        radioGroup = findViewById(R.id.toggle);
 
-    }
-
-    private void createAccount(){
-        progressbar.setVisibility(View.VISIBLE);
-
-        mAuth.fetchSignInMethodsForEmail(username.getText().toString()).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
-            @Override
-            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
-                if (task.isSuccessful()) {
-                    if (task.getResult().getSignInMethods().isEmpty()) {
-                        Intent i= new Intent(RegisterActivity.this,OtpActivity.class);
-                        i.putExtra("username",username.getText().toString());
-                        i.putExtra("phone",phone.getText().toString());
-                        i.putExtra("password",password.getText().toString());
-
-                        startActivity(i);
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                       //((UserSessionActivity)getActivity()).setFragment(new OTPFragment(username.getText().toString(),phone.getText().toString(),password.getText().toString()));
-                    }
-                    else {
-                        username.setError("Username already exists!");
-                        progressbar.setVisibility(View.INVISIBLE);
-                    }
-                }
-                else {
-                    String error=task.getException().getMessage();
-                    Toast.makeText(RegisterActivity.this,error, Toast.LENGTH_SHORT).show();
-
-                }
-                progressbar.setVisibility(View.INVISIBLE);
-            }
-        });
     }
 
 
@@ -136,6 +111,28 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
+
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if (i == R.id.search) {
+                    search.setTextColor(Color.parseColor("#FFFFFF"));
+                    offer.setTextColor(Color.parseColor("#4FC3F7"));
+                    search.setTextSize(20);
+                    offer.setTextSize(10);
+                    isFreeLancer=true;
+                }
+                else if (i == R.id.offer){
+                    offer.setTextColor(Color.parseColor("#FFFFFF"));
+                    search.setTextColor(Color.parseColor("#4FC3F7"));
+                    offer.setTextSize(20);
+                    search.setTextSize(10);
+                    isFreeLancer=false;
+                }
+            }
+        });
+
 //OTP fragment on register btn
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,7 +188,7 @@ public class RegisterActivity extends AppCompatActivity {
                     disableCloseBtn=false;
                 }else {
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                intent.putExtra("Not Registered", true);
+                    intent.putExtra("Not Registered", true);
                     startActivity(intent);
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 }
@@ -201,5 +198,38 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void createAccount(){
+        progressbar.setVisibility(View.VISIBLE);
+
+        mAuth.fetchSignInMethodsForEmail(username.getText().toString()).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+            @Override
+            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().getSignInMethods().isEmpty()) {
+                        Intent i= new Intent(RegisterActivity.this,OtpActivity.class);
+                        i.putExtra("username",username.getText().toString());
+                        i.putExtra("phone",phone.getText().toString());
+                        i.putExtra("password",password.getText().toString());
+                        i.putExtra("freelancer",isFreeLancer);
+
+                        startActivity(i);
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        //((UserSessionActivity)getActivity()).setFragment(new OTPFragment(username.getText().toString(),phone.getText().toString(),password.getText().toString()));
+                    }
+                    else {
+                        username.setError("Username already exists!");
+                        progressbar.setVisibility(View.INVISIBLE);
+                    }
+                }
+                else {
+                    String error=task.getException().getMessage();
+                    Toast.makeText(RegisterActivity.this,error, Toast.LENGTH_SHORT).show();
+
+                }
+                progressbar.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 }

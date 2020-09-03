@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "439059928943",
+    "firebase_url": "https://prosperousitsolutions-fef97.firebaseio.com",
+    "project_id": "prosperousitsolutions-fef97",
+    "storage_bucket": "prosperousitsolutions-fef97.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:439059928943:android:a75ab10da2ba961a5d7a9a",
+        "android_client_info": {
+          "package_name": "com.example.prosperousitsolutions"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "439059928943-v7nvr9kldhoubk0ook6spvi81br8a797.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiUQNA3gEM-Mz_XHNqd27-Wb1VybjY1DU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "439059928943-v7nvr9kldhoubk0ook6spvi81br8a797.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

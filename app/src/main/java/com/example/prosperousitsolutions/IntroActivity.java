@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -15,6 +16,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.example.prosperousitsolutions.user_session.LoginActivity;
+import com.example.prosperousitsolutions.user_session.RegisterActivity;
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
 import java.util.ArrayList;
@@ -90,11 +93,29 @@ public class IntroActivity extends AppCompatActivity {
 
         adapter.notifyDataSetChanged();
 
+//         jobIntroBtn.setOnClickListener(new View.OnClickListener() {
+//             @Override
+//             public void onClick(View view) {
+//                 Intent intent = new Intent(IntroActivity.this, MainActivity.class);
+//                 startActivity(intent);
+
+        freelancerIntroBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(IntroActivity.this, LoginActivity.class);
+                startActivity(i);
+                i.putExtra("freelancer",true);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+        });
+
         jobIntroBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(IntroActivity.this, MainActivity.class);
-                startActivity(intent);
+                Intent i=new Intent(IntroActivity.this, LoginActivity.class);
+                i.putExtra("freelancer",false);
+                startActivity(i);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
     }

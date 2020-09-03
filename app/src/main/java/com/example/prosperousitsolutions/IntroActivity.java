@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -19,6 +20,8 @@ import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class IntroActivity extends AppCompatActivity {
     WormDotsIndicator wormDotsIndicator;
@@ -27,11 +30,15 @@ public class IntroActivity extends AppCompatActivity {
     List<IntroModel> introList = new ArrayList<>();
     ConstraintLayout viewpagerLayout;
     Button freelancerIntroBtn, jobIntroBtn;
+    Timer timer;
 
     protected void init(){
         viewpagerLayout = findViewById(R.id.viewpager_layout);
         freelancerIntroBtn = findViewById(R.id.freelancer_intro_btn);
         jobIntroBtn = findViewById(R.id.job_intro_btn);
+
+        wormDotsIndicator = (WormDotsIndicator) findViewById(R.id.worm_dots_indicator);
+        viewPager = (ViewPager2) findViewById(R.id.viewPager);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -52,11 +59,30 @@ public class IntroActivity extends AppCompatActivity {
         introList.add(new IntroModel("giu", "ugi","#3700B3"));
         introList.add(new IntroModel("giu", "ugi","#6200EE"));
 
-        wormDotsIndicator = (WormDotsIndicator) findViewById(R.id.worm_dots_indicator);
-        viewPager = (ViewPager2) findViewById(R.id.viewPager);
         adapter = new ViewPagerAdapter(IntroActivity.this, introList);
         viewPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         viewPager.setAdapter(adapter);
+
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                viewPager.post(new Runnable(){
+
+                    @Override
+                    public void run() {
+                        if(viewPager.getCurrentItem() < 2){
+                            viewPager.setCurrentItem((viewPager.getCurrentItem()+1));
+                        }else if (viewPager.getCurrentItem()==2){
+                            viewPager.setCurrentItem((viewPager.getCurrentItem()-2));
+                        }
+                    }
+                });
+            }
+        };
+        timer = new Timer();
+        timer.schedule(timerTask, 5000, 5000);
+
+
         wormDotsIndicator.setViewPager2(viewPager);
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override

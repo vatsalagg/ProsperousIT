@@ -93,6 +93,12 @@ public class IntroActivity extends AppCompatActivity {
 
         adapter.notifyDataSetChanged();
 
+//         jobIntroBtn.setOnClickListener(new View.OnClickListener() {
+//             @Override
+//             public void onClick(View view) {
+//                 Intent intent = new Intent(IntroActivity.this, MainActivity.class);
+//                 startActivity(intent);
+
         freelancerIntroBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

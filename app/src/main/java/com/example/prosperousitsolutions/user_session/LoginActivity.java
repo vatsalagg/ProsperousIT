@@ -13,6 +13,8 @@ import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -59,31 +61,6 @@ public class LoginActivity extends AppCompatActivity {
         progressbar=findViewById(R.id.progressBar);
     }
 
-    private void login(String username){
-        progressbar.setVisibility(View.VISIBLE);
-        firebaseAuth=FirebaseAuth.getInstance();
-        firebaseAuth.signInWithEmailAndPassword(username,password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-                    if (disableCloseBtn){
-                        disableCloseBtn=false;
-                    }else {
-                        Intent mainIntent =new Intent(LoginActivity.this, MainActivity.class);
-//                      mainIntent.putExtra("Not Registered", false);
-                        startActivity(mainIntent);
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-
-                    }
-                        finish();
-                }
-                else{ String error=task.getException().getMessage();
-                    Toast.makeText(LoginActivity.this,error,  Toast.LENGTH_SHORT).show();
-                    progressbar.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +68,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
         init();
+        Window w = getWindow();
+       // w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        w.setStatusBarColor(Color.TRANSPARENT);
         skipLoginBtn=findViewById(R.id.skipLoginImg);
 
         appName=findViewById(R.id.appNametxt);
@@ -203,4 +183,56 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void login(String username){
+        progressbar.setVisibility(View.VISIBLE);
+        firebaseAuth=FirebaseAuth.getInstance();
+        firebaseAuth.signInWithEmailAndPassword(username,password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    if (disableCloseBtn){
+                        disableCloseBtn=false;
+                    }else {
+                        Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(mainIntent);
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    }
+                    finishAffinity();
+//                        db.collection("Users").document(FirebaseAuth.getInstance().getUid())
+//                                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                boolean getTask= task.getResult().get("freelancer").equals(true);
+//                                if (getTask) {
+//                                    Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+//                                  //  mainIntent.putExtra("isFreelancer",true);
+//                                    startActivity(mainIntent);
+//                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//                                    finishAffinity();
+//
+//                                } else {
+//                                    Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+//
+//
+//                                    mainIntent.putExtra("isFreelancer",false);
+//                                    startActivity(mainIntent);
+//                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//                                    finishAffinity();
+//                                }
+//                            }
+//                        });
+//                      mainIntent.putExtra("Not Registered", false);
+
+//                    }
+//                        finish();
+                }
+                else{ String error=task.getException().getMessage();
+                    Toast.makeText(LoginActivity.this,error,  Toast.LENGTH_SHORT).show();
+                    progressbar.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
+
 }

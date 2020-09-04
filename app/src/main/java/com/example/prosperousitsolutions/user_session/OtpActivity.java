@@ -51,7 +51,8 @@ public class OtpActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Timer timer;
     private int count=60;
-    String username,phone,password;
+    private String username,phone,password;
+    boolean freelancer;
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mcallback;
@@ -66,164 +67,6 @@ public class OtpActivity extends AppCompatActivity {
 //    }
 
 
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        timer.cancel();
-    }
-
-    private void sendOTP(){
-        mcallback =new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-
-            @Override
-            public void onVerificationCompleted(PhoneAuthCredential credential) {
-                // This callback will be invoked in two situations:
-                // 1 - Instant verification. In some cases the phone number can be instantly
-                //     verified without needing to send or enter a verification code.
-                // 2 - Auto-retrieval. On some devices Google Play services can automatically
-                //     detect the incoming verification SMS and perform verification without
-                //     user action.
-//                        Log.d(TAG, "onVerificationCompleted:" + credential);
-//
-//                        signInWithPhoneAuthCredential(credential);
-            }
-
-            @Override
-            public void onVerificationFailed(FirebaseException e) {
-                // This callback is invoked in an invalid request for verification is made,
-                // for instance if the the phone number format is not valid.
-//                        Log.w(TAG, "onVerificationFailed", e);
-
-                if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    enter_otp.setError(e.getMessage());
-                } else if (e instanceof FirebaseTooManyRequestsException) {
-                    enter_otp.setError(e.getMessage());
-                }
-                progressBar.setVisibility(View.INVISIBLE);
-
-                // Show a message and update the UI
-                // ...
-            }
-
-            @Override
-            public void onCodeSent(@NonNull String verificationId,
-                                   @NonNull PhoneAuthProvider.ForceResendingToken token) {
-                // The SMS verification code has been sent to the provided phone number, we
-                // now need to ask the user to enter the code and then construct a credential
-                // by combining the code with a verification ID.
-//                        Log.d(TAG, "onCodeSent:" + verificationId);
-
-                // Save verification ID and resending token so we can use them later
-                mVerificationId = verificationId;
-                mResendToken = token;
-
-                // ...
-            }
-        };
-
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                "+91"+phone,        // Phone number to verify
-                60,                 // Timeout duration
-                TimeUnit.SECONDS,   // Unit of timeout
-                OtpActivity.this,               // Activity (for callback binding)
-                mcallback);        // OnVerificationStateChangedCallbacks
-    }
-
-
-    private  void  resendotp(){
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                "+91"+phone,        // Phone number to verify
-                60,                 // Timeout duration
-                TimeUnit.SECONDS,   // Unit of timeout
-                OtpActivity.this,               // Activity (for callback binding)
-                mcallback,mResendToken);        // OnVerificationStateChangedCallbacks
-
-    }
-
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener( OtpActivity.this,new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-//                            Log.d(TAG, "signInWithCredential:success");
-
-                            final FirebaseUser user = task.getResult().getUser();
-                            AuthCredential credential= EmailAuthProvider.getCredential(username,password);
-                            user.linkWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if(task.isSuccessful()){
-                                        final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-                                        Map<String, Object> map = new HashMap<>();
-                                        map.put("email",username);
-                                        map.put("phone", phone);
-
-                                        firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
-                                                .set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()){
-                                                    Intent mainIntent = new Intent (OtpActivity.this, MainActivity.class);
-                                                    startActivity(mainIntent);
-                                                    finish();
-                                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                                    // Toast.makeText(getContext(), "Account Successfully Created!", Toast.LENGTH_SHORT).show();
-
-//                                                    firebase      Firestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
-//                                                            .collection("UserData").document("Wishlist")
-//                                                            .set(documentFields).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                                        @Override
-//                                                        public void onComplete(@NonNull Task<Void> task) {
-//                                                            if (task.isSuccessful()){
-//                                                                Intent mainIntent = new Intent (getContext(), MainActivity.class);
-//                                                                startActivity(mainIntent);
-////                                                    disableCloseBtn=false;
-//                                                                getActivity().finish();
-//
-//                                                            }else{
-//                                                                String error = task.getException().getMessage();
-//                                                                Toast.makeText(getContext(),error , Toast.LENGTH_SHORT).show();
-//                                                                progressBar.setVisibility(View.INVISIBLE);
-//
-//                                                            }
-//                                                        }
-//                                                    });
-
-                                                }else{
-                                                    String error = task.getException().getMessage();
-                                                    Toast.makeText(OtpActivity.this,error , Toast.LENGTH_SHORT).show();
-                                                    progressBar.setVisibility(View.INVISIBLE);
-
-                                                }
-                                            }
-                                        });
-
-                                    }
-                                    else {
-                                        String error = task.getException().getMessage();
-                                        Toast.makeText(OtpActivity.this,error , Toast.LENGTH_SHORT).show();
-                                        progressBar.setVisibility(View.INVISIBLE);
-                                    }
-                                }
-                            });
-                            // ...
-                        } else {
-                            // Sign in failed, display a message and update the UI
-//                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                enter_otp.setError("Invalid OTP ");// The verification code entered was invalid
-                            }
-                            progressBar.setVisibility(View.INVISIBLE);
-                        }
-                    }
-                });
-    }
-
-
-
     private void init(){
         verification_txt=findViewById(R.id.verification_txt);
         otp_sent_txt=findViewById(R.id.otp_sent_txt);
@@ -231,7 +74,6 @@ public class OtpActivity extends AppCompatActivity {
         verify=findViewById(R.id.verify_btn);
         resend=findViewById(R.id.resend_btn);
         progressBar=findViewById(R.id.progressBar);
-
     }
 
     @Override
@@ -241,6 +83,15 @@ public class OtpActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         init();
+
+        Intent intent = getIntent();
+        username= intent.getStringExtra("username");
+        phone= intent.getStringExtra("phone");
+        password= intent.getStringExtra("password");
+        freelancer= intent.getBooleanExtra("freelancer",true);
+
+
+
 
         TextPaint paint = verification_txt.getPaint();
         float width = paint.measureText("Verification");
@@ -313,4 +164,162 @@ public class OtpActivity extends AppCompatActivity {
 
 
     }
+
+    private void sendOTP(){
+        mcallback =new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+            @Override
+            public void onVerificationCompleted(PhoneAuthCredential credential) {
+                // This callback will be invoked in two situations:
+                // 1 - Instant verification. In some cases the phone number can be instantly
+                //     verified without needing to send or enter a verification code.
+                // 2 - Auto-retrieval. On some devices Google Play services can automatically
+                //     detect the incoming verification SMS and perform verification without
+                //     user action.
+//                        Log.d(TAG, "onVerificationCompleted:" + credential);
+//
+//                        signInWithPhoneAuthCredential(credential);
+            }
+
+            @Override
+            public void onVerificationFailed(FirebaseException e) {
+                // This callback is invoked in an invalid request for verification is made,
+                // for instance if the the phone number format is not valid.
+//                        Log.w(TAG, "onVerificationFailed", e);
+
+                if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                    enter_otp.setError(e.getMessage());
+                } else if (e instanceof FirebaseTooManyRequestsException) {
+                    enter_otp.setError(e.getMessage());
+                }
+                progressBar.setVisibility(View.INVISIBLE);
+
+                // Show a message and update the UI
+                // ...
+            }
+
+            @Override
+            public void onCodeSent(@NonNull String verificationId,
+                                   @NonNull PhoneAuthProvider.ForceResendingToken token) {
+                // The SMS verification code has been sent to the provided phone number, we
+                // now need to ask the user to enter the code and then construct a credential
+                // by combining the code with a verification ID.
+//                        Log.d(TAG, "onCodeSent:" + verificationId);
+
+                // Save verification ID and resending token so we can use them later
+                mVerificationId = verificationId;
+                mResendToken = token;
+
+                // ...
+            }
+        };
+
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                "+91"+phone,        // Phone number to verify
+                60,                 // Timeout duration
+                TimeUnit.SECONDS,   // Unit of timeout
+                OtpActivity.this,               // Activity (for callback binding)
+                mcallback);        // OnVerificationStateChangedCallbacks
+    }
+
+    private  void  resendotp(){
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                "+91"+phone,        // Phone number to verify
+                60,                 // Timeout duration
+                TimeUnit.SECONDS,   // Unit of timeout
+                OtpActivity.this,               // Activity (for callback binding)
+                mcallback,mResendToken);        // OnVerificationStateChangedCallbacks
+
+    }
+
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener( OtpActivity.this,new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+//                            Log.d(TAG, "signInWithCredential:success");
+
+                            final FirebaseUser user = task.getResult().getUser();
+                            AuthCredential credential= EmailAuthProvider.getCredential(username,password);
+                            user.linkWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if(task.isSuccessful()){
+                                        final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+                                        Map<String, Object> map = new HashMap<>();
+                                        map.put("email",username);
+                                        map.put("phone", phone);
+                                        map.put("freelancer",freelancer);
+
+                                        firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
+                                                .set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()){
+                                                    Intent mainIntent = new Intent (OtpActivity.this, MainActivity.class);
+                                                    startActivity(mainIntent);
+                                                    finish();
+                                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                                    // Toast.makeText(getContext(), "Account Successfully Created!", Toast.LENGTH_SHORT).show();
+
+//                                                    firebase      Firestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
+//                                                            .collection("UserData").document("Wishlist")
+//                                                            .set(documentFields).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                        @Override
+//                                                        public void onComplete(@NonNull Task<Void> task) {
+//                                                            if (task.isSuccessful()){
+//                                                                Intent mainIntent = new Intent (getContext(), MainActivity.class);
+//                                                                startActivity(mainIntent);
+////                                                    disableCloseBtn=false;
+//                                                                getActivity().finish();
+//
+//                                                            }else{
+//                                                                String error = task.getException().getMessage();
+//                                                                Toast.makeText(getContext(),error , Toast.LENGTH_SHORT).show();
+//                                                                progressBar.setVisibility(View.INVISIBLE);
+//
+//                                                            }
+//                                                        }
+//                                                    });
+
+                                                }else{
+                                                    String error = task.getException().getMessage();
+                                                    Toast.makeText(OtpActivity.this,error , Toast.LENGTH_SHORT).show();
+                                                    progressBar.setVisibility(View.INVISIBLE);
+
+                                                }
+                                            }
+                                        });
+
+                                    }
+                                    else {
+                                        String error = task.getException().getMessage();
+                                        Toast.makeText(OtpActivity.this,error , Toast.LENGTH_SHORT).show();
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                    }
+                                }
+                            });
+                            // ...
+                        } else {
+                            // Sign in failed, display a message and update the UI
+//                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                enter_otp.setError("Invalid OTP ");// The verification code entered was invalid
+                            }
+                            progressBar.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        timer.cancel();
+    }
+
+
+
 }

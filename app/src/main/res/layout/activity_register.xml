@@ -6,6 +6,48 @@
     android:layout_height="match_parent"
     tools:context=".user_session.RegisterActivity">
 
+    <RadioGroup
+        android:id="@+id/toggle"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:background="@drawable/out_line"
+        android:checkedButton="@+id/search"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/company_name">
+
+        <RadioButton
+            android:id="@+id/search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:layout_weight="1"
+            android:background="@drawable/toggle_background"
+            android:button="@null"
+            android:gravity="center"
+            android:text="Freelancer"
+            android:textColor="#EFF1F3"
+            android:textSize="20dp" />
+
+        <RadioButton
+            android:id="@+id/offer"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_marginBottom="1dp"
+            android:layout_weight="1"
+            android:background="@drawable/toggle_background"
+            android:button="@null"
+            android:gravity="center"
+            android:text="Post Jobs"
+            android:textColor="#4FC3F7"
+            android:textSize="18dp" />
+    </RadioGroup>
+
     <ImageView
         android:id="@+id/skipLoginImg"
         android:layout_width="40dp"

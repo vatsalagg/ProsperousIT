@@ -27,7 +27,9 @@
         <activity
             android:name=".user_session.LoginActivity"/>
 <!--            android:launchMode="singleInstance" />-->
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+            android:fitsSystemWindows="true"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

@@ -13,6 +13,8 @@ import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -70,13 +72,16 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         getSupportActionBar().hide();
         init();
+        Window w = getWindow();
+        //w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        w.setStatusBarColor(Color.TRANSPARENT);
         skipLoginBtn=findViewById(R.id.skipLoginImg);
 
         Intent i= getIntent();
         boolean type =  i.getBooleanExtra("freelancer",true);
         if(!type){
            radioGroup.check(radioGroup.getChildAt(1).getId());
-           search.setChecked(type);
+//           search.setChecked(type);
            offer.setTextColor(Color.parseColor("#FFFFFF"));
            search.setTextColor(Color.parseColor("#4FC3F7"));
            offer.setTextSize(20);

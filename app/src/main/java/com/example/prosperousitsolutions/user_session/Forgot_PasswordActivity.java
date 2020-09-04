@@ -12,6 +12,8 @@ import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -56,6 +58,9 @@ public class Forgot_PasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_forgot__password);
         getSupportActionBar().hide();
 
+        Window w = getWindow();
+        //w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        w.setStatusBarColor(Color.TRANSPARENT);
         init();
 
         TextPaint paint = forgot_pass_heading.getPaint();

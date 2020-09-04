@@ -103,4 +103,11 @@ public class Forgot_PasswordActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }
+

@@ -74,7 +74,6 @@ public class OtpActivity extends AppCompatActivity {
         verify=findViewById(R.id.verify_btn);
         resend=findViewById(R.id.resend_btn);
         progressBar=findViewById(R.id.progressBar);
-
     }
 
     @Override
@@ -85,7 +84,7 @@ public class OtpActivity extends AppCompatActivity {
 
         init();
 
-        Intent intent = new Intent();
+        Intent intent = getIntent();
         username= intent.getStringExtra("username");
         phone= intent.getStringExtra("phone");
         password= intent.getStringExtra("password");

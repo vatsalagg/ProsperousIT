@@ -128,20 +128,22 @@ public class IntroActivity extends AppCompatActivity {
         freelancerIntroBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i=new Intent(IntroActivity.this, LoginActivity.class);
+                Intent i=new Intent(IntroActivity.this, RegisterActivity.class);
                 startActivity(i);
                 i.putExtra("freelancer",true);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
             }
         });
 
         jobIntroBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i=new Intent(IntroActivity.this, LoginActivity.class);
+                Intent i=new Intent(IntroActivity.this, RegisterActivity.class);
                 i.putExtra("freelancer",false);
                 startActivity(i);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
             }
         });
     }

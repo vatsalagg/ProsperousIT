@@ -72,6 +72,24 @@ public class RegisterActivity extends AppCompatActivity {
         init();
         skipLoginBtn=findViewById(R.id.skipLoginImg);
 
+        Intent i= getIntent();
+        boolean type =  i.getBooleanExtra("freelancer",true);
+        if(!type){
+           radioGroup.check(radioGroup.getChildAt(1).getId());
+           search.setChecked(type);
+           offer.setTextColor(Color.parseColor("#FFFFFF"));
+           search.setTextColor(Color.parseColor("#4FC3F7"));
+           offer.setTextSize(20);
+           search.setTextSize(10);
+           isFreeLancer=false;
+        }else{
+           search.setTextColor(Color.parseColor("#FFFFFF"));
+           offer.setTextColor(Color.parseColor("#4FC3F7"));
+           search.setTextSize(20);
+           offer.setTextSize(10);
+           isFreeLancer=true;
+        }
+
         if (disableCloseBtn){
             skipLoginBtn.setVisibility(View.GONE);
         }else {
@@ -111,6 +129,8 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
+
+
 
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.prosperousitsolutions.IntroActivity;
 import com.example.prosperousitsolutions.MainActivity;
 import com.example.prosperousitsolutions.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -72,14 +73,13 @@ public class LoginActivity extends AppCompatActivity {
 //                      mainIntent.putExtra("Not Registered", false);
                         startActivity(mainIntent);
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
                     }
                         finish();
-
                 }
                 else{ String error=task.getException().getMessage();
                     Toast.makeText(LoginActivity.this,error,  Toast.LENGTH_SHORT).show();
                     progressbar.setVisibility(View.INVISIBLE);
-
                 }
             }
         });
@@ -119,9 +119,11 @@ public class LoginActivity extends AppCompatActivity {
         sign_up__txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent s=new Intent(LoginActivity.this,RegisterActivity.class);
-                startActivity(s);
+//                Intent s=new Intent(LoginActivity.this,RegisterActivity.class);
+//                startActivity(s);
+                finish();
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
 
             }
         });

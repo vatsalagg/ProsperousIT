@@ -35,6 +35,8 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -59,6 +61,8 @@ public class OtpActivity extends AppCompatActivity {
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mcallback;
     private FirebaseAuth firebaseAuth;
+
+    DatabaseReference reference;
 
 
 
@@ -253,6 +257,16 @@ public class OtpActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if(task.isSuccessful()){
+                                        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseAuth.getCurrentUser().getUid());
+
+                                        final HashMap<String, String> hashMap = new HashMap<>();
+                                        hashMap.put("id", firebaseAuth.getCurrentUser().getUid());
+                                        hashMap.put("username", username);
+                                        hashMap.put("imageURL", "default");
+//                                        hashMap.put("status", "offline");
+                                        hashMap.put("search", username.toLowerCase());
+
+
                                         final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
                                         Map<String, Object> map = new HashMap<>();
                                         map.put("email",username);
@@ -264,6 +278,12 @@ public class OtpActivity extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()){
+                                                    reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+
+                                                        }
+                                                    });
                                                     Intent mainIntent = new Intent (OtpActivity.this, MainActivity.class);
                                                     startActivity(mainIntent);
                                                     finish();

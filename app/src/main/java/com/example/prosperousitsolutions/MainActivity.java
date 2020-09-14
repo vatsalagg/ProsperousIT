@@ -128,8 +128,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.main_search:
                 return true;
             case R.id.main_chat:
+                Intent intent=new Intent(MainActivity.this,ChatActivity.class);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 return true;
-
         }
 //        if (item.getTitle() == "Add") {
 //            Toast.makeText(this, "clicked add", Toast.LENGTH_SHORT).show();
